@@ -1,0 +1,3 @@
+Add this code to your VbaProject.OTM file under Microsoft Outlook Objects/ThisOutlookSession.
+
+Messages are scheduled for 11:00 - 12:00 or 16:00 - 17:00 each day. You are basically forcing GTD onto others...or pretending to do GTD yourself...
