@@ -12,6 +12,7 @@ Option Explicit
 Private Sub Application_ItemSend(ByVal Item As Object, Cancel As Boolean)
     Dim dTime As Date
     Dim mi As MailItem
+    Dim lResp As Long
     
     If TypeName(Item) = "MailItem" Then
         Set mi = Item
@@ -23,11 +24,13 @@ Private Sub Application_ItemSend(ByVal Item As Object, Cancel As Boolean)
         Else
             dTime = getNextSendWindow()
             
-            Select Case MsgBox(Prompt:="Send at: " & Format(dTime, "HH:MM"), buttons:=vbYesNoCancel)
-                Case vbOK:      mi.DeferredDeliveryTime = dTime
-                Case vbNo:      mi.DeferredDeliveryTime = DateAdd("n", 1, Now)
-                                MsgBox Prompt:="Send in one minute.", buttons:=vbOKOnly
-                Case vbCancel:  Cancel = True
+            lResp = MsgBox(Prompt:="Send at: " & Format(dTime, "HH:MM"), buttons:=vbYesNoCancel)
+            
+            Select Case lResp
+                Case 6:     mi.DeferredDeliveryTime = dTime
+                Case 7:     mi.DeferredDeliveryTime = DateAdd("n", 1, Now)
+                            MsgBox Prompt:="Send in one minute.", buttons:=vbOKOnly
+                Case Else:  Cancel = True
             End Select
         End If
     End If
@@ -37,9 +40,7 @@ End Sub
 Private Function getNextSendWindow() As Date
     Dim dNow As Date
     Dim lNext As Long
-    
     Dim lVariance As Long
-    
     Dim dSend As Date
     
     lVariance = Int((59 - 1 + 1) * Rnd + 1)
